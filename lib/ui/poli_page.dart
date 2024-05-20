@@ -1,31 +1,33 @@
-// mengimpor pustaka dari paket Flutter
+// Mengimpor paket Flutter dan widget
 import 'package:flutter/material.dart';
+import '../widget/sidebar.dart';
 import '../model/poli.dart';
 import 'poli_detail.dart';
 import 'poli_item.dart';
 import 'poli_form.dart';
 
-// mendefinisikan kelas PoliPage sebagai StatefulWidget
+// Kelas PoliPage adalah StatefulWidget yang membuat tampilan halaman Poli
 class PoliPage extends StatefulWidget {
-  // mendefinisikan konstruktor untuk kelas PoliPage dengan menerima parameter key (opsional)
+  // Konstruktor kelas PoliPage
   const PoliPage({super.key});
+
   @override
-  // mendeklarasikan metode createState() yang akan membuat dan mengembalikan objek _PoliPageState
   State<PoliPage> createState() => _PoliPageState();
 }
 
-// mendefinisikan kelas _PoliPageState sebagai State dari PoliPage
+// Kelas _PoliPageState adalah State dari PoliPage
 class _PoliPageState extends State<PoliPage> {
-  // meng-override metode build() untuk membangun tampilan UI
   @override
   Widget build(BuildContext context) {
-    // mengembalikan Scaffold, yang merupakan kerangka dasar untuk tampilan UI
+    // Membuat Scaffold yang berisi Drawer, AppBar, dan Body
     return Scaffold(
-      // menampilkan judul
+      // Menambahkan Drawer dengan widget Sidebar
+      drawer: Sidebar(),
+      // Membuat AppBar dengan judul "Data Poli" dan tombol tambah
       appBar: AppBar(
         title: const Text("Data Poli"),
         actions: [
-          // ketika tombol tambah ditekan, kita menggunakan Navigator.push() untuk berpindah ke halaman PoliForm
+          // Tombol tambah yang mengarah ke halaman PoliForm
           GestureDetector(
             child: const Icon(Icons.add),
             onTap: () {
@@ -37,9 +39,10 @@ class _PoliPageState extends State<PoliPage> {
           )
         ],
       ),
-      //  menampilkan daftar item PoliItem
+      // Membuat Body berupa ListView yang berisi beberapa item Poli
       body: ListView(
         children: [
+          // Menampilkan item Poli dengan nama poli yang berbeda
           PoliItem(poli: Poli(namaPoli: "Poli Anak")),
           PoliItem(poli: Poli(namaPoli: "Poli Kandungan")),
           PoliItem(poli: Poli(namaPoli: "Poli Gigi")),
