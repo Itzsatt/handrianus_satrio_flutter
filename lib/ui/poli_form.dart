@@ -1,47 +1,80 @@
-// mengimpor pustaka dari paket Flutter
+// Mengimpor paket Flutter
 import 'package:flutter/material.dart';
+import '/model/poli.dart';
+import '/ui/poli_detail.dart';
 
-// mendefinisikan kelas PoliForm sebagai StatefulWidget
+// Mendefinisikan widget PoliForm yang merupakan StatefulWidget
 class PoliForm extends StatefulWidget {
   const PoliForm({Key? key}) : super(key: key);
 
+  // Membuat state untuk widget PoliForm
   @override
-  // mendefinisikan metode createState() yang akan membuat dan mengembalikan objek _PoliFormState
   _PoliFormState createState() => _PoliFormState();
 }
 
+// Mendefinisikan state untuk widget PoliForm
 class _PoliFormState extends State<PoliForm> {
-  // // mendeklarasikan objek _formKey yang digunakan untuk mengidentifikasi form
+  // Membuat key untuk form
   final _formKey = GlobalKey<FormState>();
 
+  // Membuat controller untuk field input nama poli
+  final _namaPoliCtrl = TextEditingController();
+
+  // Membuat method build yang akan mengembalikan widget Scaffold
   @override
-  // mendefinisikan metode build() yang akan mereturn widget yang akan ditampilkan
   Widget build(BuildContext context) {
-    // menggunakan widget Scaffold yang merupakan kerangka utama untuk tampilan halaman
     return Scaffold(
-      // menampilkan judul
-      appBar: AppBar(title: const Text("Tambah Poli")),
-      // menggunakan widget SingleChildScrollView untuk menghindari masalah overflow jika kontennya lebih panjang dari layar
+      // Menambahkan AppBar dengan judul "Tambah Poli"
+      appBar: AppBar(
+        title: const Text("Tambah Poli"),
+      ),
+      // Membungkus konten dalam SingleChildScrollView untuk memungkinkan scrolling
       body: SingleChildScrollView(
         child: Form(
-          // menggunakan objek _formKey untuk menghubungkan form ini dengan kunci yang digunakan untuk validasi
+          // Menggunakan key form yang sudah didefinisikan sebelumnya
           key: _formKey,
+          // Membuat kolom yang berisi field input nama poli dan tombol simpan
           child: Column(
             children: [
-              TextField(
-                decoration: const InputDecoration(labelText: "Nama Poli"),
-              ),
-              // memberikan jarak antara TextField
-              SizedBox(height: 20),
-              // menampilkan tombol simpan
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text("Simpan"),
-              ),
+              _fieldNamaPoli(), // Memanggil fungsi _fieldNamaPoli untuk membuat field input nama poli
+              const SizedBox(height: 20), // Membuat jarak vertikal 20 piksel
+              _tombolSimpan(), // Memanggil fungsi _tombolSimpan untuk membuat tombol simpan
             ],
           ),
         ),
       ),
+    );
+  }
+
+  // Membuat fungsi untuk membuat field input nama poli
+  Widget _fieldNamaPoli() {
+    return TextField(
+      // Menambahkan dekorasi label pada field input
+      decoration: const InputDecoration(
+        labelText: "Nama Poli",
+      ),
+      // Menghubungkan field input dengan controller yang sudah didefinisikan sebelumnya
+      controller: _namaPoliCtrl,
+    );
+  }
+
+  // Membuat fungsi untuk membuat tombol simpan
+  Widget _tombolSimpan() {
+    return ElevatedButton(
+      // Menambahkan fungsi onPressed yang akan dijalankan saat tombol ditekan
+      onPressed: () {
+        // Membuat objek Poli baru dengan nama poli yang diambil dari field input
+        Poli poli = Poli(namaPoli: _namaPoliCtrl.text);
+        // Melakukan navigasi ke halaman PoliDetail dengan objek Poli yang baru dibuat
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PoliDetail(poli: poli),
+          ),
+        );
+      },
+      // Menambahkan teks pada tombol simpan
+      child: const Text("Simpan"),
     );
   }
 }
