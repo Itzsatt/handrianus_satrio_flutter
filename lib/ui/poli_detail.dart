@@ -1,56 +1,109 @@
-// widget dasar untuk membangun ui flutter
+// Mengimpor paket Flutter
 import 'package:flutter/material.dart';
+import 'poli_page.dart';
+import 'poli_update_form.dart';
 import '../model/poli.dart';
 
-// Mendefinisikan kelas PoliDetail yang merupakan StatefulWidget. StatefulWidget digunakan ketika sebuah widget dapat berubah dalam keadaan (state) selama waktu tertentu
+// Mendefinisikan widget PoliDetail yang merupakan StatefulWidget
+// Widget ini menerima parameter Poli yang akan ditampilkan detailnya
 class PoliDetail extends StatefulWidget {
-  // Mendefinisikan variabel poli yang merupakan objek dari kelas Poli. Variabel ini akan digunakan untuk menampilkan data poli yang sedang ditampilkan detailnya
   final Poli poli;
-// Konstruktor untuk kelas PoliDetail yang menerima parameter key (opsional) dan poli (wajib). Dalam konstruktor ini, kita menggunakan super(key: key) untuk meneruskan parameter key ke konstruktor kelas induk
-  const PoliDetail({Key? key, required this.poli}) : super(key: key);
-// Meng-override/menimpa metode createState() yang mengembalikan objek _PoliDetailState. Metode ini bertanggung jawab untuk membuat dan menginisialisasi state dari widget PoliDetail
+
+  const PoliDetail({super.key, required this.poli});
+
+  // Membuat state baru untuk PoliDetail
   @override
   State<PoliDetail> createState() => _PoliDetailState();
 }
 
-// Mendefinisikan kelas _PoliDetailState yang merupakan state dari PoliDetail. State ini akan mengatur tampilan dan perilaku widget PoliDetail
+// Mendefinisikan state untuk PoliDetail
 class _PoliDetailState extends State<PoliDetail> {
-  // Meng-override/menimpa metode build() untuk membangun tampilan UI dari widget PoliDetail. Metode ini mengembalikan widget Scaffold sebagai kontainer utama
+  // Membangun tampilan PoliDetail
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Membuat AppBar dengan judul "Detail Poli" menggunakan widget AppBar
+      // Menampilkan AppBar dengan judul "Detail Poli"
       appBar: AppBar(title: const Text("Detail Poli")),
-      // Membuat Column sebagai kontainer untuk elemen-elemen dalam tampilan detail poli
+      // Membuat layout utama dengan Column
       body: Column(
         children: [
+          // Memberikan jarak vertikal
           const SizedBox(height: 20),
-          // Menampilkan teks "Nama Poli: [namaPoli]" menggunakan widget Text. Nilai [namaPoli] diambil dari properti namaPoli pada objek poli
+          // Menampilkan nama poli
           Text(
-            "Nama Poli: ${widget.poli.namaPoli}",
+            "Nama Poli : ${widget.poli.namaPoli}",
             style: const TextStyle(fontSize: 20),
           ),
+          // Memberikan jarak vertikal
           const SizedBox(height: 20),
-          // Membuat Row yang berisi dua tombol (ElevatedButton) yaitu "Ubah" dan "Hapus". Tombol tersebut menggunakan warna latar belakang yang berbeda (hijau dan merah) menggunakan ElevatedButton.styleFrom
+          // Membuat baris dengan dua tombol
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                child: const Text("Ubah"),
-              ),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child: const Text("Hapus"),
-              ),
+              // Memanggil tombol "Ubah"
+              _tombolUbah(),
+              // Memanggil tombol "Hapus"
+              _tombolHapus(),
             ],
           )
         ],
       ),
     );
   }
-}
 
-// Dengan demikian, kode tersebut menghasilkan halaman detail poli yang menampilkan nama poli dan dua tombol "Ubah" dan "Hapus"
+  // Membuat tombol "Ubah"
+  Widget _tombolUbah() {
+    return ElevatedButton(
+      onPressed: () {
+        // Navigasi ke halaman PoliUpdateForm saat tombol ditekan
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PoliUpdateForm(poli: widget.poli),
+          ),
+        );
+      },
+      style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+      child: const Text("Ubah"),
+    );
+  }
+
+  // Membuat tombol "Hapus"
+  Widget _tombolHapus() {
+    return ElevatedButton(
+      onPressed: () {
+        // Menampilkan dialog konfirmasi untuk menghapus data
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: const Text("Yakin ingin menghapus data ini?"),
+            actions: [
+              // Tombol "YA" untuk menghapus data
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const PoliPage()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                child: const Text("YA"),
+              ),
+              // Tombol "Tidak" untuk membatalkan penghapusan
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                child: const Text("Tidak"),
+              ),
+            ],
+          ),
+        );
+      },
+      style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+      child: const Text("Hapus"),
+    );
+  }
+}
